@@ -14,6 +14,8 @@ const xrpl = require("xrpl");
 const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
 var wallet = null;
 
+
+
 async function send() {
   const prepared = await client.autofill({
     TransactionType: "Payment",
