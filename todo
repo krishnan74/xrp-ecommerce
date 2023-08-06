@@ -1,0 +1,26 @@
+Day 1 
+//Create landing page with signin button or signup button (clerk auth)
+Inside the dashboard , create a connect wallet for XRP
+    When xrp is connected store the wallet details in variable in global scope
+    Use the wallet addreses to send XRP 
+
+
+
+wallet
+: 
+Wallet
+classicAddress
+: 
+"rprjxEctUgZc4yuv9Rq4DwTb5PmeHceKHZ"
+privateKey
+: 
+"EDDE0FD6B640EE2DA9B5C871B256D0DC8ED6D3AF32C30A1D443C1E7530B936577A"
+publicKey
+: 
+"EDF13697A030002A9D58A479E4B9C744E7D773AC5A04E229AD100849F2D563135E"
+seed
+: 
+"sEd7F3RcPqq3uHFmnWSgYDN93b2zDEg"
+address
+: 
+(...)
