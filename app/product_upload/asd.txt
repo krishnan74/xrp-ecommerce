@@ -1,0 +1,49 @@
+<input
+          type="text"
+          name="name"
+          placeholder="Product Name"
+          value={formData.name}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="description"
+          placeholder="Description"
+          value={formData.description}
+          onChange={handleInputChange}
+        />
+        <input
+          type="number"
+          name="cost"
+          placeholder="Cost"
+          value={formData.cost}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="tag1"
+          placeholder="Tag 1"
+          value={formData.tag1}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="tag2"
+          placeholder="Tag 2"
+          value={formData.tag2}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="tag3"
+          placeholder="Tag 3"
+          value={formData.tag3}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="sellerAddress"
+          placeholder="Seller Address"
+          value={formData.sellerAddress}
+          onChange={handleInputChange}
+        />

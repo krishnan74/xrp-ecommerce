@@ -34,13 +34,13 @@ const ProductCard = (props) => {
         <div className="flex flex-wrap gap-3 mb-1">
           {/* Tags for the product */}
           <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-md text-xs">
-            {props.tag}
+            {props.tag1}
           </span>
           <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-md text-xs">
-            {props.tag}
+            {props.tag2}
           </span>
           <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-md text-xs">
-            {props.tag}
+            {props.tag3}
           </span>
         </div>
         <div className="flex items-center mt-2 py-1">

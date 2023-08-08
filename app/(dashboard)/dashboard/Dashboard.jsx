@@ -3,17 +3,21 @@ import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(
   "https://fveklwaemqucyxsrbmhv.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZWtsd2FlbXF1Y3l4c3JibWh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTEzMjU3NjEsImV4cCI6MjAwNjkwMTc2MX0.xxunT1-FVfyByRp_KIwvknVcvw1Yt9balVDb1z-463o"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZWtsd2FlbXF1Y3l4c3JibWh2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTMyNTc2MSwiZXhwIjoyMDA2OTAxNzYxfQ.xukOaFj-7g5OP2DEiBgK5BFg_BxvUgV2YVoxGDUc70I"
 );
 import ProductCard from "components/ProductCard";
 
-const fetchData = async () => {
-  let { data, error } = await supabase
-    .from("UserTable")
-    .select("name");
+const fetchProductData = async () => {
+  let { data, error } = await supabase.from("ProductTable").select();
 
   console.log(data);
   return { data, error };
+};
+
+const insertData = async () => {
+  const { error } = await supabase
+    .from("UserTable")
+    .insert({ name: "Denmark" });
 };
 
 const Dashboard = () => {
@@ -21,141 +25,39 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchDataAndSetData = async () => {
-      const { data, error } = await fetchData();
+      const { data, error } = await fetchProductData();
       if (data) {
         setData(data);
       }
     };
 
     fetchDataAndSetData();
-  }, []);
+  }, [data]);
 
   return (
     <>
+      <button onClick={insertData}>InsertData</button>
+
       <div className="custom-scrollbar overflow-x-auto whitespace-nowrap">
         <div className="flex gap-10 px-10">
-          <ProductCard
-            name={data.name}
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
+        {data.map((item) => (
+            <ProductCard
+              key={item.id} // Make sure to use a unique key for each iteration
+              name={item.name}
+              description={item.description}
+              cost={item.cost}
+              tag1={item.tag1}
+              tag2={item.tag2}
+              tag3={item.tag3}
+              sellerAddress = {item.sellerAddress}
+            />
+          ))}
+          
+          
         </div>
       </div>
 
-      <div className="h-24"></div>
-      <div className="custom-scrollbar overflow-x-auto whitespace-nowrap">
-        <div className="flex gap-10 px-10">
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-        </div>
-      </div>
-
-      <div className="h-24"></div>
-      <div className="custom-scrollbar overflow-x-auto whitespace-nowrap">
-        <div className="flex gap-10 px-10">
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-          <ProductCard
-            name="Honda Bike"
-            description="250CC 60ml 45cq torque"
-            cost="30"
-            tag="Bike"
-          />
-        </div>
-      </div>
+      
     </>
   );
 };
