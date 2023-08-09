@@ -1,64 +1,100 @@
 'use client'
-
 import React, { useEffect, useState } from 'react';
 import { buttonVariants } from 'components/ui/button';
-import { MessageSquare } from "lucide-react";
-import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+import { User } from 'lucide-react';
+import { createClient } from "@supabase/supabase-js";
+import { MessageSquare } from 'lucide-react';
+import Link from 'next/link';
+import { useSelectedWallet } from '../app/SelectedWalletContext';
+import { UserButton } from '@clerk/nextjs';
 
-const xrpl = require("xrpl");
+const xrpl = require('xrpl');
 
-const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
+const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+
+const supabase = createClient(
+  "https://fveklwaemqucyxsrbmhv.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZWtsd2FlbXF1Y3l4c3JibWh2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTMyNTc2MSwiZXhwIjoyMDA2OTAxNzYxfQ.xukOaFj-7g5OP2DEiBgK5BFg_BxvUgV2YVoxGDUc70I"
+);
+
+const fetchCurrentWallet = async (currentWallet) => {
+  const { error } = await supabase
+    .from('CurrentXRPUser')
+    .update({ wallet: currentWallet })
+    .eq('id', 1)
+};
 
 const Navbar = () => {
   const [showConnectDiv, setShowConnectDiv] = useState(false);
-  const [wallet, setWallet] = useState(null); // Use state to manage wallet
-  const [connectInput, setConnectInput] = useState("");
-  const [accountInput, setAccountInput] = useState("");
+  const [showWalletDiv, setShowWalletDiv] = useState(false);
+  const [wallets, setWallets] = useState([]);
+  const { selectedWallet, setSelectedWallet } = useSelectedWallet();
+  // const [selectedWallet, setSelectedWallet] = useState(null); // Selected wallet state
+  const [connectInput, setConnectInput] = useState('');
+  const [accountInput, setAccountInput] = useState('');
 
   useEffect(() => {
+      
     // This effect will run whenever the wallet state changes
-  }, [wallet]);
+  }, [wallets, selectedWallet]);
+
+ 
 
   const toggleConnectDiv = () => {
     setShowConnectDiv(!showConnectDiv);
   };
 
+  const toggleWalletConnectDiv = () => {
+    setShowWalletDiv(!showWalletDiv);
+  };
+
   async function createNewWallet() {
     await client.connect();
-    // Create a wallet and fund it with the Testnet faucet:
     const fund_result = await client.fundWallet();
-    setWallet(fund_result.wallet);
-    if (fund_result) {
-      toggleConnectDiv();
-    }
-    console.log(fund_result);
+    const newWallet = fund_result.wallet;
+    setWallets([...wallets, newWallet]);
+    setSelectedWallet(newWallet); // Set the newly created wallet as selected
+    toggleConnectDiv();
   }
 
   async function connectWallet() {
     await client.connect();
     try {
-      const NewWallet = xrpl.Wallet.fromSeed(connectInput);
-      setWallet(NewWallet);
-
-      if (NewWallet) {
-        toggleConnectDiv();
-      }
-      console.log(NewWallet);
-      setConnectInput("");
+      const newWallet = xrpl.Wallet.fromSeed(connectInput);
+      setWallets([...wallets, newWallet]);
+      setSelectedWallet(newWallet); // Set the connected wallet as selected
+      toggleConnectDiv();
+      setConnectInput('');
     } catch (error) {
       console.log(error);
-      alert("Invalid secret key!!! Account does not exist");
+      alert('Invalid secret key!!! Account does not exist');
     }
   }
-
   return (
     <div className="flex justify-evenly items-center fixed w-full border-b-2 h-17 py-3 z-30 bg-white">
       <h1>XRP - ECommerce</h1>
-      <button className={buttonVariants({ variant: "outline" })}>
-        {wallet ? wallet.address : ""}
-      </button>
-      
+      <div className="relative">
+        <button
+          className={buttonVariants({ variant: 'outline' })}
+          onClick={toggleWalletConnectDiv}
+        >
+          <User className="mr-3" />
+          {selectedWallet ? selectedWallet.address : 'Select Wallet'}
+        </button>
+        {showWalletDiv && (
+          <div className="absolute top-10 right-0 bg-white p-4 rounded-md shadow-md">
+            {wallets.map((wallet) => (
+              <button
+                key={wallet.address}
+                className="block w-full py-2 px-4 text-left hover:bg-gray-100"
+                onClick={() => setSelectedWallet(wallet)}
+              >
+                {wallet.address}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <button
         onClick={toggleConnectDiv}
         className={buttonVariants({ variant: "outline" })}
@@ -138,3 +174,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

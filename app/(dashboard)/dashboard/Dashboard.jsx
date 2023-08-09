@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { useSelectedWallet } from '../../SelectedWalletContext';
+
 const supabase = createClient(
   "https://fveklwaemqucyxsrbmhv.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZWtsd2FlbXF1Y3l4c3JibWh2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTMyNTc2MSwiZXhwIjoyMDA2OTAxNzYxfQ.xukOaFj-7g5OP2DEiBgK5BFg_BxvUgV2YVoxGDUc70I"
@@ -31,6 +33,13 @@ const Dashboard = () => {
 
     fetchDataAndSetData();
   }, [data]);
+
+  const { selectedWallet } = useSelectedWallet();
+
+  useEffect(() => {
+    console.log(selectedWallet ? selectedWallet : 'No wallet selected oombu');
+  }, [selectedWallet])
+
 
   return (
     <>

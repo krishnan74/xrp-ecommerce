@@ -1,6 +1,74 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelectedWallet } from "../app/SelectedWalletContext";
+
+
+const xrpl = require("xrpl");
+
+const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
+
+async function sendXRP(senderWallet, receiverAddress, cost) {
+
+  try {
+
+    await client.connect();
+    const prepared = await client.autofill({
+    TransactionType: "Payment", 
+    Account: senderWallet.address,
+    Amount: xrpl.xrpToDrops(cost),
+    Destination: receiverAddress,
+  });
+  const max_ledger = prepared.LastLedgerSequence;
+  console.log("Prepared transaction instructions:", prepared);
+  console.log("Transaction cost:", xrpl.dropsToXrp(prepared.Fee), "XRP");
+  console.log("Transaction expires after ledger:", max_ledger);
+
+  // Sign prepared instructions ------------------------------------------------
+  const signed = senderWallet.sign(prepared);
+  console.log("Identifying hash:", signed.hash);
+  console.log("Signed blob:", signed.tx_blob);
+
+  // Submit signed blob --------------------------------------------------------
+  const tx = await client.submitAndWait(signed.tx_blob);
+
+  // Check transaction results -------------------------------------------------
+  console.log("Transaction result:", tx.result.meta.TransactionResult);
+  console.log(
+    "Balance changes:",
+    JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2)
+    );
+  }
+
+  catch (error) {
+    console.log("Error"+error)
+  }
+  
+
+}
+
+
+
+
+
+
 
 const ProductCard = (props) => {
+
+  const { selectedWallet } = useSelectedWallet();
+  
+  useEffect(() => {
+  
+  }, [selectedWallet])
+
+  
+
+  const handleSendXRP = () => {
+    if (selectedWallet) {
+      sendXRP(selectedWallet, props.sellerAddress, props.cost);
+    } else {
+      console.error('Sender wallet is not defined.');
+    }
+  };
+
   return (
     <div className="container mx-auto max-w-sm p-4 shadow-md rounded-lg bg-white relative">
       <div className="relative z-10">
@@ -50,7 +118,7 @@ const ProductCard = (props) => {
           <button className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200 text-xs">
             Add to Cart
           </button>
-          <button className="px-5 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200 text-xs">
+          <button onClick={handleSendXRP} className="px-5 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200 text-xs">
             Buy
           </button>
         </div>
