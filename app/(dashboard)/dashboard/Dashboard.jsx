@@ -9,8 +9,6 @@ import ProductCard from "components/ProductCard";
 
 const fetchProductData = async () => {
   let { data, error } = await supabase.from("ProductTable").select();
-
-  console.log(data);
   return { data, error };
 };
 
