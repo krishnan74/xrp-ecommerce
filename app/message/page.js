@@ -7,28 +7,22 @@ import { buttonVariants } from "components/ui/button";
 import { UserButton } from "@clerk/nextjs";
 import NavbarLayout from "components/NavbarLayout";
 import Navbar from "components/Navbar";
-
-import Dashboard from "./Dashboard";
 import ProductCard from "components/ProductCard";
+import MessagePageComponent from "./MessagePageComponent";
+import { useRouter } from "next/router";
 
-const xrpl = require("xrpl");
-
-const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
-
-
-
-
-export default function DashBoardPage() {
-
+export default function MessagePage() {
+  const router = useRouter();
+  const { sellerAddress } = router.query;
 
   return (
     <div className="page-container">
       <div className="">
         <Navbar />
       </div>
-    <div className="h-12"></div>
+    <div className="h-24"></div>
       <div className="">
-        <Dashboard></Dashboard>
+        <MessagePageComponent></MessagePageComponent>
       </div>
     </div>
   );

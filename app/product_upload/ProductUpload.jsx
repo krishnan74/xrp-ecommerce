@@ -8,15 +8,32 @@ const supabase = createClient(
     "https://fveklwaemqucyxsrbmhv.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZWtsd2FlbXF1Y3l4c3JibWh2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTMyNTc2MSwiZXhwIjoyMDA2OTAxNzYxfQ.xukOaFj-7g5OP2DEiBgK5BFg_BxvUgV2YVoxGDUc70I"
 );
-  
+
+const fetchProductData = async () => {
+  let { data, error } = await supabase.from("ProductTable").select();
+  return { data, error };
+};
+
 const ProductUpload = () => {
   const { selectedWallet } = useSelectedWallet();
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    console.log(selectedWallet ? selectedWallet : 'No wallet selected oombu');
-  }, [selectedWallet])
+    const fetchDataAndSetData = async () => {
+      const { data, error } = await fetchProductData();
+      if (data) {
+        setProducts(data);
+      }
+    };
 
-  const [products, setProducts] = useState([]); // State to store uploaded products
+    fetchDataAndSetData();
+  }, [products]);
+
+  useEffect(() => {
+    console.log(selectedWallet ? selectedWallet : "No wallet selected oombu");
+  }, [selectedWallet]);
+
+  // State to store uploaded products
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -24,7 +41,7 @@ const ProductUpload = () => {
     tag1: "",
     tag2: "",
     tag3: "",
-    sellerAddress: selectedWallet.address,
+    sellerAddress: selectedWallet ? selectedWallet.classicAddress : "",
   });
 
   const handleInputChange = (e) => {
@@ -33,35 +50,52 @@ const ProductUpload = () => {
   };
 
   const handleUpload = async () => {
-    const newProduct = { ...formData};
-  
+    const newProduct = { ...formData };
+
     try {
       const { data, error } = await supabase
-        .from('ProductTable')
+        .from("ProductTable")
         .insert([newProduct]);
-  
+
       if (error) {
-        console.error('Error inserting product:', error);
+        console.error("Error inserting product:", error);
       } else {
-        console.log('Product inserted successfully:', data);
-        setProducts([...products, newProduct]);
+        console.log("Product inserted successfully:", data);
+
         setFormData({
-          name: '',
-          description: '',
-          cost: '',
-          tag1: '',
-          tag2: '',
-          tag3: '',
+          name: "",
+          description: "",
+          cost: "",
+          tag1: "",
+          tag2: "",
+          tag3: "",
         });
       }
     } catch (error) {
-      console.error('Error inserting product:', error);
+      console.error("Error inserting product:", error);
     }
   };
-  
+
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-2xl font-semibold mb-6">Product Upload Page</h1>
+    <div className="container mx-auto">
+      <div className="mt-8">
+        <h2 className="text-lg font-semibold mb-4">Uploaded Products</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {products.map((item) => (
+            <ProductCard
+              mode="sell"
+              key={item.id}
+              name={item.name}
+              description={item.description}
+              cost={item.cost}
+              tag1={item.tag1}
+              tag2={item.tag2}
+              tag3={item.tag3}
+              sellerAddress={item.sellerAddress}
+            />
+          ))}
+        </div>
+      </div>
       <div className="bg-white rounded-md p-6 shadow-md">
         <h2 className="text-lg font-semibold mb-4">Upload a New Product</h2>
         <div className="grid grid-cols-2 gap-4">
@@ -113,7 +147,6 @@ const ProductUpload = () => {
             onChange={handleInputChange}
             className="input"
           />
-          
         </div>
         <button
           onClick={handleUpload}
@@ -121,23 +154,6 @@ const ProductUpload = () => {
         >
           Upload Product
         </button>
-      </div>
-      <div className="mt-8">
-        <h2 className="text-lg font-semibold mb-4">Uploaded Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {products.map((item) => (
-            <ProductCard
-              key={item.id}
-              name={item.name}
-              description={item.description}
-              cost={item.cost}
-              tag1={item.tag1}
-              tag2={item.tag2}
-              tag3={item.tag3}
-              sellerAddress={item.sellerAddress}
-            />
-          ))}
-        </div>
       </div>
     </div>
   );

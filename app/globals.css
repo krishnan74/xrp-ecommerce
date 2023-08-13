@@ -88,10 +88,19 @@ html, body{
 }
 
 
+*{
+  border: 1px  red;
+}
 
 .custom-scrollbar::-webkit-scrollbar { 
   
   height: 5px;
+  background-color: #f5f5f5;
+}
+
+.custom-scrollbar2::-webkit-scrollbar { 
+  
+  height: 0px;
   background-color: #f5f5f5;
 }
 

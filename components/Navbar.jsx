@@ -38,7 +38,21 @@ const Navbar = () => {
     // This effect will run whenever the wallet state changes
   }, [wallets, selectedWallet]);
 
- 
+  useEffect(() => {
+    // Load selectedWallet from localStorage on page load
+    const savedSelectedWallet = localStorage.getItem("selectedWallet");
+    console.log(JSON.parse(savedSelectedWallet));
+    if (savedSelectedWallet) {
+      setSelectedWallet(JSON.parse(savedSelectedWallet));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save selectedWallet to localStorage whenever it changes
+    if (selectedWallet) {
+      localStorage.setItem("selectedWallet", JSON.stringify(selectedWallet));
+    }
+  }, [selectedWallet]);
 
   const toggleConnectDiv = () => {
     setShowConnectDiv(!showConnectDiv);
@@ -72,24 +86,24 @@ const Navbar = () => {
   }
   return (
     <div className="flex justify-evenly items-center fixed w-full border-b-2 h-17 py-3 z-30 bg-white">
-      <h1>XRP - ECommerce</h1>
+      <Link href={"dashboard"}><h1>XRP - ECommerce</h1></Link>
       <div className="relative">
         <button
           className={buttonVariants({ variant: 'outline' })}
           onClick={toggleWalletConnectDiv}
         >
           <User className="mr-3" />
-          {selectedWallet ? selectedWallet.address : 'Select Wallet'}
+          {selectedWallet ? selectedWallet.classicAddress : 'Select Wallet'}
         </button>
         {showWalletDiv && (
           <div className="absolute top-10 right-0 bg-white p-4 rounded-md shadow-md">
             {wallets.map((wallet) => (
               <button
-                key={wallet.address}
+                key={wallet.classicAddress}
                 className="block w-full py-2 px-4 text-left hover:bg-gray-100"
                 onClick={() => setSelectedWallet(wallet)}
               >
-                {wallet.address}
+                {wallet.classicAddress}
               </button>
             ))}
           </div>
@@ -106,7 +120,7 @@ const Navbar = () => {
           <MessageSquare />
         </button>
       </Link>
-      <UserButton afterSignOutUrl="/" />
+      <UserButton afterSignOutUrl="/" userProfileMode= "navigation" userProfileUrl='/profile'/>
       {showConnectDiv && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md space-y-6">
