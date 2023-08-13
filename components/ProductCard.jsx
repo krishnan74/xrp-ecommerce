@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { buttonVariants } from "components/ui/button";
@@ -71,7 +72,7 @@ const ProductCard = (props) => {
               />
             </div>
             <p className="absolute left-12 top-[-0px] text-white font-bold">
-              Jack Marshal
+              {props.sellerName}
             </p>
           </>
         ) : (
@@ -145,9 +146,9 @@ const ProductCard = (props) => {
                 Buy
               </button>
               {/* Chat icon */}
-              <Link
-                href={`/message?sellerAddress=${props.sellerAddress}`}
-                passHref
+                <Link
+                   href={{ pathname: 'message', query: { sellerAddress: props.sellerAddress , sellerName: props.sellerName} }}
+                
               >
                 <button className={buttonVariants({ variant: "outline" })}>
                   <MessageSquare className="text-gray-600" size={18} />

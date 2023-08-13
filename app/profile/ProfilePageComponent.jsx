@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UserProfile } from "@clerk/nextjs";
 import ProductUpload from "../product_upload/ProductUpload";
 import { Pencil, Star } from 'lucide-react'; // Import the edit and star icons
 
-const ProfilePageComponent = () => {
+const ProfilePageComponent = (props) => {
   const [editing, setEditing] = useState(false);
-  const [name, setName] = useState("John Doe");
+  const [name, setName] = useState(props.user.firstName);
   const [about, setAbout] = useState("Lorem ipsum dolor sit amet...");
   const [location, setLocation] = useState("New York, USA");
   const [website, setWebsite] = useState("https://example.com");
@@ -18,6 +18,9 @@ const ProfilePageComponent = () => {
     setEditing(true);
   };
 
+  useEffect(() => {
+    
+  }, [props.user])
   const handleSaveClick = () => {
     setEditing(false);
     // Perform any save/update actions here, like updating user profile

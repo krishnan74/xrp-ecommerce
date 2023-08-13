@@ -1,20 +1,31 @@
-"use client";
+'use client'
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { Button } from "components/ui/button";
-import { buttonVariants } from "components/ui/button";
-import { UserButton } from "@clerk/nextjs";
+
 import NavbarLayout from "components/NavbarLayout";
 import Navbar from "components/Navbar";
 import ProductCard from "components/ProductCard";
+
 import MessagePageComponent from "./MessagePageComponent";
-import { useRouter } from "next/router";
+import { usePathname, useSearchParams } from 'next/navigation'
+
 
 export default function MessagePage() {
-  const router = useRouter();
-  const { sellerAddress } = router.query;
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
+  const sellerAddress = searchParams.get('sellerAddress')
+  const sellerName = searchParams.get('sellerName')
+  //const sellerAddress = router.query.sellerAddress;
+  console.log(sellerAddress)
+
+  // if (!sellerAddress) {
+  //   // Query parameter not available yet, return a loading state or handle the case
+  //   return <div>Loading...</div>;
+  // }
+  // MessagePage.getInitialProps = async () => {
+  //   return {};
+  // };
   return (
     <div className="page-container">
       <div className="">
@@ -22,7 +33,7 @@ export default function MessagePage() {
       </div>
     <div className="h-24"></div>
       <div className="">
-        <MessagePageComponent></MessagePageComponent>
+        <MessagePageComponent sellerAddress={sellerAddress} sellerName={ sellerName } />
       </div>
     </div>
   );

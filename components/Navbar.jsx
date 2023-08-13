@@ -7,6 +7,7 @@ import { MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { useSelectedWallet } from '../app/SelectedWalletContext';
 import { UserButton } from '@clerk/nextjs';
+import MyProfileButton from './MyProfileButton';
 
 const xrpl = require('xrpl');
 
@@ -86,14 +87,16 @@ const Navbar = () => {
   }
   return (
     <div className="flex justify-evenly items-center fixed w-full border-b-2 h-17 py-3 z-30 bg-white">
-      <Link href={"dashboard"}><h1>XRP - ECommerce</h1></Link>
+      <Link href={"dashboard"}>
+        <h1>XRP - ECommerce</h1>
+      </Link>
       <div className="relative">
         <button
-          className={buttonVariants({ variant: 'outline' })}
+          className={buttonVariants({ variant: "outline" })}
           onClick={toggleWalletConnectDiv}
         >
           <User className="mr-3" />
-          {selectedWallet ? selectedWallet.classicAddress : 'Select Wallet'}
+          {selectedWallet ? selectedWallet.classicAddress : "Select Wallet"}
         </button>
         {showWalletDiv && (
           <div className="absolute top-10 right-0 bg-white p-4 rounded-md shadow-md">
@@ -120,7 +123,19 @@ const Navbar = () => {
           <MessageSquare />
         </button>
       </Link>
-      <UserButton afterSignOutUrl="/" userProfileMode= "navigation" userProfileUrl='/profile'/>
+      
+      <Link href={"profile"}>
+        <button className={buttonVariants({ variant: "outline" })}>
+          My Profile
+        </button>
+      </Link>
+      
+      <UserButton
+            afterSignOutUrl="/"
+            userProfileMode="modal"
+            userProfileUrl="/profile"
+          />
+
       {showConnectDiv && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md space-y-6">

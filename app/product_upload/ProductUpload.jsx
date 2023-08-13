@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import ProductCard from "../../components/ProductCard"; // Import the ProductCard component
 import { createClient } from "@supabase/supabase-js";
 import { useSelectedWallet } from "../SelectedWalletContext";
+import { WithUser } from "@clerk/nextjs";
+
 
 const supabase = createClient(
     "https://fveklwaemqucyxsrbmhv.supabase.co",
@@ -17,6 +19,7 @@ const fetchProductData = async () => {
 const ProductUpload = () => {
   const { selectedWallet } = useSelectedWallet();
   const [products, setProducts] = useState([]);
+  
 
   useEffect(() => {
     const fetchDataAndSetData = async () => {
@@ -49,6 +52,7 @@ const ProductUpload = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+
   const handleUpload = async () => {
     const newProduct = { ...formData };
 
@@ -77,8 +81,12 @@ const ProductUpload = () => {
   };
 
   return (
-    <div className="container mx-auto">
-      <div className="mt-8">
+    
+
+        
+        <div className="container mx-auto">
+          <div className="mt-8">
+            
         <h2 className="text-lg font-semibold mb-4">Uploaded Products</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map((item) => (
@@ -156,6 +164,8 @@ const ProductUpload = () => {
         </button>
       </div>
     </div>
+        
+    
   );
 };
 

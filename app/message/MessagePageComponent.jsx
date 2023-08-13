@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from "react";
 import UserList from "./UserList";
 import MessageSection from "./MessageSection";
@@ -12,8 +13,8 @@ const supabase = createClient(
 
 
 
-const MessagingPage = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
+const MessagingPage = (props) => {
+  const [selectedUser, setSelectedUser] = useState(props.sellerName? props.sellerName : null);
   const [users, setUsers] = useState([]);
 
   // Example messages for selected user
@@ -54,6 +55,7 @@ const MessagingPage = () => {
       <div className="w-1/4 bg-gray-200 p-4">
         <UserList
           users={users}
+          
           selectedUser={selectedUser}
           onSelectUser={handleSelectUser}
         />
@@ -61,6 +63,8 @@ const MessagingPage = () => {
       <div className="w-3/4 bg-white p-4">
         <MessageSection selectedUser={selectedUser} messages={messages} />
         <SendMessageForm
+          users = {users}
+          newUserMessageAddress={props.sellerAddress}
           currentUser={selectedWallet}
           selectedUser={selectedUser}
         />

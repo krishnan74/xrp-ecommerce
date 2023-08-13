@@ -103,6 +103,7 @@ const Dashboard = () => {
                 tag2={item.tag2}
                 tag3={item.tag3}
                 sellerAddress={item.sellerAddress}
+                sellerName={item.sellerName}
               />
             ))}
           </div>
