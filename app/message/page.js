@@ -16,8 +16,8 @@ export default function MessagePage() {
 
   const sellerAddress = searchParams.get('sellerAddress')
   const sellerName = searchParams.get('sellerName')
+  const messageMode = searchParams.get('messageMode')
   //const sellerAddress = router.query.sellerAddress;
-  console.log(sellerAddress)
 
   // if (!sellerAddress) {
   //   // Query parameter not available yet, return a loading state or handle the case
@@ -33,7 +33,7 @@ export default function MessagePage() {
       </div>
     <div className="h-24"></div>
       <div className="">
-        <MessagePageComponent sellerAddress={sellerAddress} sellerName={ sellerName } />
+        <MessagePageComponent sellerAddress={sellerAddress} sellerName={sellerName} mode={ messageMode } />
       </div>
     </div>
   );

@@ -3,22 +3,77 @@ import React, { useState, useEffect } from "react";
 import ProductCard from "../../components/ProductCard"; // Import the ProductCard component
 import { createClient } from "@supabase/supabase-js";
 import { useSelectedWallet } from "../SelectedWalletContext";
-import { WithUser } from "@clerk/nextjs";
-
+import { Button } from "components/ui/button";
+import { PlusCircleIcon } from "lucide-react";
 
 const supabase = createClient(
-    "https://fveklwaemqucyxsrbmhv.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZWtsd2FlbXF1Y3l4c3JibWh2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTMyNTc2MSwiZXhwIjoyMDA2OTAxNzYxfQ.xukOaFj-7g5OP2DEiBgK5BFg_BxvUgV2YVoxGDUc70I"
+  "https://fveklwaemqucyxsrbmhv.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZWtsd2FlbXF1Y3l4c3JibWh2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTMyNTc2MSwiZXhwIjoyMDA2OTAxNzYxfQ.xukOaFj-7g5OP2DEiBgK5BFg_BxvUgV2YVoxGDUc70I"
 );
-
-
 
 const ProductUpload = () => {
   const { selectedWallet } = useSelectedWallet();
+  var selectWallet = null;
   const [products, setProducts] = useState([]);
+  const [selectedOption1, setSelectedOption1] = useState("");
+  const [selectedOption2, setSelectedOption2] = useState("");
+  const [selectedOption3, setSelectedOption3] = useState("");
+
+  const handleSelectChange = (e, setSelectedOption) => {
+    setSelectedOption(e.target.value);
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
   
+  const tags = [
+    "Electronics",
+    "Smartphone",
+    "Apple",
+    "Gaming",
+    "Console",
+    "Entertainment",
+    "Sports",
+    "Footwear",
+    "Style",
+    "Laptop",
+    "Performance",
+    "Music",
+    "Collectibles",
+    "Vintage",
+    "Camera",
+    "Outdoors",
+    "Smart-Home",
+    "Voice-Control",
+    "TV",
+    "Photography",
+    "Headphones",
+    "Bose",
+    "Design",
+    "Instrument",
+    "Guitar",
+    "Nintendo",
+    "Accessory",
+    "Tablet",
+    "Productivity",
+    "Wearable",
+    "Streaming",
+  ];
+
+  useEffect(() => {
+    console.log(selectedWallet ? selectedWallet : "No wallet selected ");
+    setFormData({ ...formData, sellerAddress: selectedWallet ? selectedWallet.classicAddress : "" });
+  }, [selectedWallet]);
+
   const fetchProductData = async () => {
-    let { data, error } = await supabase.from("ProductTable").select().eq("sellerAddress", selectedWallet.classicAddress);
+    let { data, error } = await supabase
+      .from("ProductTable")
+      .select()
+      .eq("sellerAddress", selectedWallet ? selectedWallet.classicAddress : "");
     return { data, error };
   };
 
@@ -32,11 +87,6 @@ const ProductUpload = () => {
 
     fetchDataAndSetData();
   }, [products]);
-
-  useEffect(() => {
-    console.log(selectedWallet ? selectedWallet : "No wallet selected ");
-  }, [selectedWallet]);
-
   // State to store uploaded products
   const [formData, setFormData] = useState({
     name: "",
@@ -45,14 +95,12 @@ const ProductUpload = () => {
     tag1: "",
     tag2: "",
     tag3: "",
-    sellerAddress: selectedWallet ? selectedWallet.classicAddress : "",
+    sellerAddress: "",
+    sellerName: "",
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
+  
+  
 
   const handleUpload = async () => {
     const newProduct = { ...formData };
@@ -69,7 +117,6 @@ const ProductUpload = () => {
 
         setFormData({
           name: "",
-          
           description: "",
           cost: "",
           tag1: "",
@@ -83,12 +130,8 @@ const ProductUpload = () => {
   };
 
   return (
-    
-
-        
-        <div className="container mx-auto">
-          <div className="mt-8">
-            
+    <div className="container mx-auto">
+      <div className="mt-8">
         <h2 className="text-lg font-semibold mb-4">Uploaded Products</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map((item) => (
@@ -106,7 +149,7 @@ const ProductUpload = () => {
           ))}
         </div>
       </div>
-      <div className="bg-white rounded-md p-6 shadow-md">
+      <div className="bg-white rounded-md p-6 shadow-md mt-8">
         <h2 className="text-lg font-semibold mb-4">Upload a New Product</h2>
         <div className="grid grid-cols-2 gap-4">
           <input
@@ -114,6 +157,15 @@ const ProductUpload = () => {
             name="name"
             placeholder="Product Name"
             value={formData.name}
+            onChange={handleInputChange}
+            className="input"
+          />
+
+          <input
+            type="hidden"
+            name="sellerAddress"
+            placeholder=""
+            value={formData.sellerAddress}
             onChange={handleInputChange}
             className="input"
           />
@@ -133,41 +185,54 @@ const ProductUpload = () => {
             onChange={handleInputChange}
             className="input"
           />
-          <input
-            type="text"
+          <select
+            value={selectedOption1}
+            onChange={(e) => handleSelectChange(e, setSelectedOption1)}
             name="tag1"
-            placeholder="Tag 1"
-            value={formData.tag1}
-            onChange={handleInputChange}
-            className="input"
-          />
-          <input
-            type="text"
+          >
+            <option value="">Select an option</option>
+            {tags.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={selectedOption2}
+            onChange={(e) => handleSelectChange(e, setSelectedOption2)}
             name="tag2"
-            placeholder="Tag 2"
-            value={formData.tag2}
-            onChange={handleInputChange}
-            className="input"
-          />
-          <input
-            type="text"
+          >
+            <option value="">Select an option</option>
+            {tags.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={selectedOption3}
+            onChange={(e) => handleSelectChange(e, setSelectedOption3)}
             name="tag3"
-            placeholder="Tag 3"
-            value={formData.tag3}
-            onChange={handleInputChange}
-            className="input"
-          />
+          >
+            <option value="">Select an option</option>
+            {tags.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+
+
         </div>
-        <button
-          onClick={handleUpload}
-          className="btn bg-blue-500 text-white mt-4 hover:bg-blue-600 transition duration-300"
-        >
+
+        <Button onClick={handleUpload} className="mt-4">
+          <PlusCircleIcon className="mr-2 h-4 w-4" />
           Upload Product
-        </button>
+        </Button>
       </div>
     </div>
-        
-    
   );
 };
 

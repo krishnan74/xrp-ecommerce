@@ -14,7 +14,7 @@ const ProfilePage = () => {
       </div>
       <div className="h-12"></div>
       <div className="">
-        <ProfilePageComponent user="Kri"></ProfilePageComponent>
+        <ProfilePageComponent user="Krishnan"></ProfilePageComponent>
       </div>
     </div>
   );

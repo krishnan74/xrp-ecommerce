@@ -5,13 +5,13 @@ import { User } from 'lucide-react';
 import { createClient } from "@supabase/supabase-js";
 import { MessageSquare } from 'lucide-react';
 import Link from 'next/link';
-import { useSelectedWallet } from '../app/SelectedWalletContext';
-import { UserButton } from '@clerk/nextjs';
-import MyProfileButton from './MyProfileButton';
+import { X } from "lucide-react";
+import { useSelectedWallet } from "../app/SelectedWalletContext";
+import { UserButton } from "@clerk/nextjs";
 
-const xrpl = require('xrpl');
+const xrpl = require("xrpl");
 
-const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
 
 const supabase = createClient(
   "https://fveklwaemqucyxsrbmhv.supabase.co",
@@ -20,32 +20,64 @@ const supabase = createClient(
 
 const fetchCurrentWallet = async (currentWallet) => {
   const { error } = await supabase
-    .from('CurrentXRPUser')
+    .from("CurrentXRPUser")
     .update({ wallet: currentWallet })
-    .eq('id', 1)
+    .eq("id", 1);
 };
 
 const Navbar = () => {
   const [showConnectDiv, setShowConnectDiv] = useState(false);
   const [showWalletDiv, setShowWalletDiv] = useState(false);
   const [wallets, setWallets] = useState([]);
+  const [showDisconnectButton, setShowDisconnectButton] = useState(false);
   const { selectedWallet, setSelectedWallet } = useSelectedWallet();
   // const [selectedWallet, setSelectedWallet] = useState(null); // Selected wallet state
-  const [connectInput, setConnectInput] = useState('');
-  const [accountInput, setAccountInput] = useState('');
+  const [connectInput, setConnectInput] = useState("");
+  const [accountInput, setAccountInput] = useState("");
+  const [usernameConnectInput, setUsernameConnectInput] = useState("");
+  const [usernameCreateInput, setUsernameCreateInput] = useState("");
+
+  const disconnectWallet = (wallet) => {
+    const updatedWallets = wallets.filter(
+      (w) => w.classicAddress !== wallet.classicAddress
+    );
+    setWallets(updatedWallets);
+    if (
+      selectedWallet &&
+      selectedWallet.classicAddress === wallet.classicAddress
+    ) {
+      setSelectedWallet(null);
+    }
+  };
 
   useEffect(() => {
-      
     // This effect will run whenever the wallet state changes
   }, [wallets, selectedWallet]);
 
   useEffect(() => {
     // Load selectedWallet from localStorage on page load
     const savedSelectedWallet = localStorage.getItem("selectedWallet");
-    console.log(JSON.parse(savedSelectedWallet));
+
     if (savedSelectedWallet) {
       setSelectedWallet(JSON.parse(savedSelectedWallet));
     }
+  }, []);
+
+  const clearSelectedWallet = () => {
+    localStorage.removeItem("selectedWallet");
+  };
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      clearSelectedWallet();
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 
   useEffect(() => {
@@ -101,13 +133,18 @@ const Navbar = () => {
         {showWalletDiv && (
           <div className="absolute top-10 right-0 bg-white p-4 rounded-md shadow-md">
             {wallets.map((wallet) => (
-              <button
-                key={wallet.classicAddress}
-                className="block w-full py-2 px-4 text-left hover:bg-gray-100"
-                onClick={() => setSelectedWallet(wallet)}
-              >
-                {wallet.classicAddress}
-              </button>
+              <div className="flex">
+                <button
+                  key={wallet.classicAddress}
+                  className="block w-full py-2 px-4 text-left hover:bg-gray-100"
+                  onClick={() => setSelectedWallet(wallet)}
+                >
+                  {wallet.classicAddress}
+                </button>
+                <button onClick={() => disconnectWallet(wallet)}>
+                  <X size={20} />
+                </button>
+              </div>
             ))}
           </div>
         )}
@@ -123,26 +160,37 @@ const Navbar = () => {
           <MessageSquare />
         </button>
       </Link>
-      
+
       <Link href={"profile"}>
         <button className={buttonVariants({ variant: "outline" })}>
           My Profile
         </button>
       </Link>
-      
+
       <UserButton
-            afterSignOutUrl="/"
-            userProfileMode="modal"
-            userProfileUrl="/profile"
-          />
+        afterSignOutUrl="/"
+        userProfileMode="modal"
+        userProfileUrl="/profile"
+      />
 
       {showConnectDiv && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md space-y-6">
+          <div
+            className="bg-white p-6 rounded-md space-y-6 w-3/5
+          "
+          >
             <div className="grid grid-cols-2 gap-6">
               {/* Connect Side */}
               <div>
                 <h2 className="text-lg font-semibold mb-2">Connect</h2>
+                <input
+                  type="text"
+                  value={usernameConnectInput}
+                  onChange={(e) => setUsernameConnectInput(e.target.value)}
+                  placeholder="Enter username"
+                  className="w-full mt-2 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-400"
+                />
+
                 <input
                   type="text"
                   value={connectInput}
@@ -150,6 +198,7 @@ const Navbar = () => {
                   placeholder="Enter xrp account secret key (seed)"
                   className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-400"
                 />
+
                 <button
                   onClick={connectWallet}
                   className="mt-3 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
@@ -162,10 +211,10 @@ const Navbar = () => {
                 <h2 className="text-lg font-semibold mb-2">Create Account</h2>
                 <input
                   type="text"
-                  value={accountInput}
-                  onChange={(e) => setAccountInput(e.target.value)}
-                  placeholder="Enter account details"
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-400"
+                  value={usernameCreateInput}
+                  onChange={(e) => setUsernameCreateInput(e.target.value)}
+                  placeholder="Enter username"
+                  className="w-full mt-2 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-400"
                 />
                 <button
                   onClick={createNewWallet}

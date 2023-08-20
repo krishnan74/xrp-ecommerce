@@ -12,7 +12,6 @@ Changes to be made
     Star rating has to be implemented 
     Render messages on the screen in chronological order along with their time of sent 
     Enable editing the products uploaded by users
-    Implement filtering of products based on tags
     Implement Cart functionality and add confirmation for buy 
     
 DEBUGS  

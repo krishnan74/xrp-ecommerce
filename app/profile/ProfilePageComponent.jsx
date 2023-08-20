@@ -1,18 +1,16 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { UserProfile } from "@clerk/nextjs";
 import ProductUpload from "../product_upload/ProductUpload";
 import { Pencil, Star } from 'lucide-react'; // Import the edit and star icons
 
 const ProfilePageComponent = (props) => {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(props.user);
-  const [about, setAbout] = useState("Lorem ipsum dolor sit amet...");
-  const [location, setLocation] = useState("New York, USA");
+  const [about, setAbout] = useState("Beginner seller who specializes in electronics");
+  const [location, setLocation] = useState("Chennai, TamilNadu");
   const [website, setWebsite] = useState("https://example.com");
-  const [role, setRole] = useState("Web Developer");
+  const [role, setRole] = useState("Electronics dealer");
   const [rating, setRating] = useState(4.5); // Example star rating
 
   const handleEditClick = () => {
@@ -46,9 +44,9 @@ const ProfilePageComponent = (props) => {
           </button>
 
           <div className="flex items-center">
-            <Image
+            <img
               className="w-20 h-20 rounded-full object-cover border-2 border-blue-500"
-              src="/profile.jpg"
+              src="profile.jpg"
               alt="Profile"
             />
             <div className="ml-4">

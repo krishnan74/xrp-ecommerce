@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useSelectedWallet } from "../../SelectedWalletContext";
 import ProductCard from "components/ProductCard";
-import { X } from "lucide-react";
+import { X, ArrowUpCircle } from "lucide-react";
 
 const supabase = createClient(
   "https://fveklwaemqucyxsrbmhv.supabase.co",
@@ -14,7 +14,26 @@ const supabase = createClient(
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
+  const handleScroll = () => {
+    if (window.scrollY > 300) {
+      setShowBackToTop(true);
+    } else {
+      setShowBackToTop(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const handleBackToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const fetchProductData = async () => {
     let { data, error } = await supabase.from("ProductTable").select();
   
@@ -93,64 +112,66 @@ const Dashboard = () => {
   
   
 
-  return (<div className="bg-white text-black min-h-screen py-10">
-  <div className="max-w-6xl mx-auto px-4">
-    <div className="flex justify-start custom-scrollbar2 gap-4 overflow-auto">
-      {tags.map((tag) => (
-        <div key={tag} className="flex relative">
-          <button
-            onClick={() => handleTagClick(tag)}
-            className={`px-4 py-2 rounded-md border ${
-              selectedTag === tag
-                ? "bg-black text-white border-black rounded-l-md"
-                : "bg-white text-black border-black"
-            } hover:bg-black hover:text-white hover:border-black transition whitespace-nowrap`}
-          >
-            {tag}
-          </button>
-          {selectedTag === tag && (
-            <button
-              onClick={() => handleTagClick(null)}
-              className="px-2 rounded-r-md bg-black text-white"
-            >
-              <X size={20} />
-            </button>
-          )}
+  return (
+    <div className="bg-white text-black min-h-screen py-10">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex justify-start custom-scrollbar2 gap-4 overflow-auto">
+          {tags.map((tag) => (
+            <div key={tag} className="flex relative">
+              <button
+                onClick={() => handleTagClick(tag)}
+                className={`px-4 py-2 rounded-md border ${
+                  selectedTag === tag
+                    ? "bg-black text-white border-black rounded-l-md"
+                    : "bg-white text-black border-black"
+                } hover:bg-black hover:text-white hover:border-black transition whitespace-nowrap`}
+              >
+                {tag}
+              </button>
+              {selectedTag === tag && (
+                <button
+                  onClick={() => handleTagClick(null)}
+                  className="px-2 rounded-r-md bg-black text-white"
+                >
+                  <X size={20} />
+                </button>
+              )}
+            </div>
+          ))}
         </div>
-      ))}
+
+        <section className="mb-8 mt-8">
+          <h1 className="text-3xl font-semibold mb-4">Trending Products</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data.map((item) => (
+              <ProductCard
+                key={item.id}
+                mode="buy"
+                name={item.name}
+                description={item.description}
+                cost={item.cost}
+                tag1={item.tag1}
+                tag2={item.tag2}
+                tag3={item.tag3}
+                sellerAddress={item.sellerAddress}
+                sellerName={item.sellerName}
+                productImage={item.productImage}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Add more sections as needed */}
+      </div>
+      {showBackToTop && (
+        <button
+          onClick={handleBackToTop}
+          className="fixed bottom-6 right-6 p-3 bg-black text-white rounded-full shadow-lg hover:bg-gray-900 transition"
+        >
+          <ArrowUpCircle size={24} />
+        </button>
+      )}
     </div>
-
-    <section className="mb-8 mt-8">
-      <h1 className="text-3xl font-semibold mb-4">Trending Products</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.map((item) => (
-          <ProductCard
-            key={item.id}
-            mode="buy"
-            name={item.name}
-            description={item.description}
-            cost={item.cost}
-            tag1={item.tag1}
-            tag2={item.tag2}
-            tag3={item.tag3}
-            sellerAddress={item.sellerAddress}
-            sellerName={item.sellerName}
-          />
-        ))}
-      </div>
-    </section>
-
-    <section className="mb-8">
-      {/* Add another section here */}
-      <h1 className="text-3xl font-semibold mb-4">New Arrivals</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Display new arrival products */}
-      </div>
-    </section>
-
-    {/* Add more sections as needed */}
-  </div>
-</div>
   );
 };
 

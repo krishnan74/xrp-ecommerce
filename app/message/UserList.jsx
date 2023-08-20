@@ -1,11 +1,19 @@
 import React from 'react';
 
 const UserList = ({ users, selectedUser, onSelectUser }) => {
+  // Remove duplicate users with the same address
+  const uniqueUsers = users.reduce((unique, user) => {
+    if (!unique.some((existingUser) => existingUser.receiver === user.receiver)) {
+      unique.push(user);
+    }
+    return unique;
+  }, []);
+
   return (
     <div className="user-list bg-gray-200 p-4 rounded-lg">
       <h3 className="text-lg font-semibold mb-3">Recent Contacts</h3>
       <ul>
-        {users.map((user) => (
+        {uniqueUsers.map((user) => (
           <li
             key={user.id}
             onClick={() => onSelectUser(user.receiver)}
@@ -13,7 +21,7 @@ const UserList = ({ users, selectedUser, onSelectUser }) => {
               selectedUser === user.receiver ? 'bg-blue-500 text-white' : 'bg-white'
             }`}
           >
-            {user.name}
+            {user.receiver}
           </li>
         ))}
       </ul>

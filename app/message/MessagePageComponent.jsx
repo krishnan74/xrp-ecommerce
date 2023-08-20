@@ -14,17 +14,15 @@ const supabase = createClient(
 
 
 const MessagingPage = (props) => {
-  const [selectedUser, setSelectedUser] = useState(props.sellerName? props.sellerName : null);
+  const [selectedUser, setSelectedUser] = useState(props.mode == "new" ? props.sellerName : null);
   const [users, setUsers] = useState([]);
 
   // Example messages for selected user
-  const [messages, setMessages] = useState([]);
 
   const handleSelectUser = (userId) => {
     setSelectedUser(userId);
     // Fetch messages for the selected user from an API or other data source
     // For now, using an empty array as placeholder
-    setMessages([]);
   };
 
     const { selectedWallet } = useSelectedWallet();
@@ -61,7 +59,7 @@ const MessagingPage = (props) => {
         />
       </div>
       <div className="w-3/4 bg-white p-4">
-        <MessageSection selectedUser={selectedUser} messages={messages} />
+        <MessageSection selectedUser={selectedUser} />
         <SendMessageForm
           users = {users}
           newUserMessageAddress={props.sellerAddress}

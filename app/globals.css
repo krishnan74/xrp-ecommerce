@@ -113,3 +113,31 @@ html, body{
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #2962ff; /* Blue shade */
 }
+
+
+.message-section {
+  /* Your general styling for the message section */
+}
+
+.messages {
+  /* Your styling for the messages container */
+}
+
+.message {
+  padding: 8px;
+  margin: 10px 0px;
+  border-radius: 8px;
+  max-width: 50%; /* Adjust this to limit the width of messages */
+}
+
+.message.right {
+  background-color: #3B82F6; /* Light green background for messages sent by us */
+  color: white; /* Text color for messages sent by us */
+  margin-left: auto;
+}
+
+.message.left {
+  background-color: #e0e0e0; /* Light gray background for messages received */
+  color: #000; /* Text color for messages received */
+  margin-right: auto;
+}
