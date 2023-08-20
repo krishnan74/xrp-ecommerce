@@ -21,6 +21,7 @@ const ProfilePageComponent = (props) => {
   useEffect(() => {
     
   }, [props.user])
+
   const handleSaveClick = () => {
     setEditing(false);
     // Perform any save/update actions here, like updating user profile
@@ -44,9 +45,9 @@ const ProfilePageComponent = (props) => {
           </button>
 
           <div className="flex items-center">
-            <img
+            <Image
               className="w-20 h-20 rounded-full object-cover border-2 border-blue-500"
-              src="profile.jpg"
+              src="/profile.jpg"
               alt="Profile"
             />
             <div className="ml-4">

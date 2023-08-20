@@ -48,7 +48,7 @@ const MessagingPage = (props) => {
        
 
     fetchDataAndSetData();
-  }, [users]);
+  }, [users? users: ""]);
 
   return (
     <div className="flex h-screen">

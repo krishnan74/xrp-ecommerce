@@ -41,7 +41,7 @@ const Dashboard = () => {
     };
 
     fetchDataAndSetData();
-  }, [selectedTag]);
+  }, [selectedTag? selectedTag: ""]);
 
   const { selectedWallet } = useSelectedWallet();
 
@@ -49,9 +49,6 @@ const Dashboard = () => {
     console.log(selectedWallet ? selectedWallet : "No wallet selected");
   }, [selectedWallet]);
 
-  useEffect(() => {
-
-  }, [selectedTag])
 
   const handleTagClick = (tag) => {
     setSelectedTag(tag);
