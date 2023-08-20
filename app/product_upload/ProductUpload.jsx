@@ -11,15 +11,16 @@ const supabase = createClient(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2ZWtsd2FlbXF1Y3l4c3JibWh2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTMyNTc2MSwiZXhwIjoyMDA2OTAxNzYxfQ.xukOaFj-7g5OP2DEiBgK5BFg_BxvUgV2YVoxGDUc70I"
 );
 
-const fetchProductData = async () => {
-  let { data, error } = await supabase.from("ProductTable").select();
-  return { data, error };
-};
+
 
 const ProductUpload = () => {
   const { selectedWallet } = useSelectedWallet();
   const [products, setProducts] = useState([]);
   
+  const fetchProductData = async () => {
+    let { data, error } = await supabase.from("ProductTable").select().eq("sellerAddress", selectedWallet.classicAddress);
+    return { data, error };
+  };
 
   useEffect(() => {
     const fetchDataAndSetData = async () => {
@@ -33,7 +34,7 @@ const ProductUpload = () => {
   }, [products]);
 
   useEffect(() => {
-    console.log(selectedWallet ? selectedWallet : "No wallet selected oombu");
+    console.log(selectedWallet ? selectedWallet : "No wallet selected ");
   }, [selectedWallet]);
 
   // State to store uploaded products
@@ -68,6 +69,7 @@ const ProductUpload = () => {
 
         setFormData({
           name: "",
+          
           description: "",
           cost: "",
           tag1: "",

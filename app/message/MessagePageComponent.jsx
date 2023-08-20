@@ -35,7 +35,7 @@ const MessagingPage = (props) => {
     };
 
   useEffect(() => {
-    console.log(selectedWallet ? selectedWallet : "No wallet selected oombu");
+    console.log(selectedWallet ? selectedWallet : "No wallet selected");
   }, [selectedWallet]);
 
   useEffect(() => {

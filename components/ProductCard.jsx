@@ -1,6 +1,9 @@
 'use client'
 import React, { useEffect } from "react";
 import Link from "next/link";
+import { Button } from "components/ui/button";
+import { ShoppingCartIcon } from "lucide-react";
+import { ShoppingBagIcon } from "lucide-react";
 import { buttonVariants } from "components/ui/button";
 import { useSelectedWallet } from "../app/SelectedWalletContext";
 import { MessageSquare } from "lucide-react";
@@ -71,7 +74,7 @@ const ProductCard = (props) => {
                 alt="Profile"
               />
             </div>
-            <p className="absolute left-12 top-[-0px] text-white font-bold">
+            <p className="absolute left-12 top-[0px] text-white font-bold">
               {props.sellerName}
             </p>
           </>
@@ -98,18 +101,18 @@ const ProductCard = (props) => {
         <p className="text-gray-700 text-sm mb-1">{props.description}</p>
         <div className="flex flex-wrap gap-3 mb-1">
           {/* Tags for the product */}
-          <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-md text-xs">
+          <span className="px-3 py-1 bg-gray-200 text-black rounded-md text-xs">
             {props.tag1}
           </span>
-          <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-md text-xs">
+          <span className="px-3 py-1 bg-gray-200 text-black rounded-md text-xs">
             {props.tag2}
           </span>
-          <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-md text-xs">
+          <span className="px-3 py-1 bg-gray-200 text-black rounded-md text-xs">
             {props.tag3}
           </span>
         </div>
         <div className="flex items-center mt-2 py-1">
-          <span className="text-gray-800 font-semibold">
+          <span className="text-black font-semibold">
             Price: {props.cost} xrp
           </span>
         </div>
@@ -117,14 +120,13 @@ const ProductCard = (props) => {
         <div className="flex mt-1 justify-between gap-3">
           {isSellMode ? (
             <>
-              <button
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "px-8 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 hover:text-white transition duration-200"
-                )}
+              <Button 
+                variant = "outline"
+                className= "px-8 py-2 "
+                
               >
                 Edit
-              </button>
+              </Button>
               <button
                 className={cn(
                   buttonVariants({ variant: "outline" }),
@@ -136,19 +138,24 @@ const ProductCard = (props) => {
             </>
           ) : (
             <>
-              <button className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200 text-xs">
-                Add to Cart
-              </button>
-              <button
-                onClick={handleSendXRP}
-                className="px-5 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200 text-xs"
-              >
-                Buy
-              </button>
-              {/* Chat icon */}
-                <Link
-                   href={{ pathname: 'message', query: { sellerAddress: props.sellerAddress , sellerName: props.sellerName} }}
+                <Button variant="secondary" >
+                <ShoppingCartIcon  className="mr-2 h-4 w-4" />
+                  Add to Cart
                 
+                </Button>
+              <Button onClick={handleSendXRP}>
+                <ShoppingBagIcon className="mr-2 h-4 w-4" />
+                Buy
+              </Button>
+              {/* Chat icon */}
+              <Link
+                href={{
+                  pathname: "message",
+                  query: {
+                    sellerAddress: props.sellerAddress,
+                    sellerName: props.sellerName,
+                  },
+                }}
               >
                 <button className={buttonVariants({ variant: "outline" })}>
                   <MessageSquare className="text-gray-600" size={18} />

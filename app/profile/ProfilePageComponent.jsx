@@ -7,7 +7,7 @@ import { Pencil, Star } from 'lucide-react'; // Import the edit and star icons
 
 const ProfilePageComponent = (props) => {
   const [editing, setEditing] = useState(false);
-  const [name, setName] = useState(props.user.firstName);
+  const [name, setName] = useState(props.user);
   const [about, setAbout] = useState("Lorem ipsum dolor sit amet...");
   const [location, setLocation] = useState("New York, USA");
   const [website, setWebsite] = useState("https://example.com");
@@ -33,7 +33,7 @@ const ProfilePageComponent = (props) => {
 
   return (
     <div className="bg-gray-100 min-h-screen py-10">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-lg p-8 relative">
           {/* Edit Icon */}
           <button
@@ -139,7 +139,7 @@ const ProfilePageComponent = (props) => {
               </button>
             </div>
           )}
-          <ProductUpload />
+          <ProductUpload currentUser={ props.user } />
         </div>
       </div>
     </div>
