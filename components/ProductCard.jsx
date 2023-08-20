@@ -8,6 +8,7 @@ import { buttonVariants } from "components/ui/button";
 import { useSelectedWallet } from "../app/SelectedWalletContext";
 import { MessageSquare } from "lucide-react";
 import cn from "classnames";
+import Image from "next/image";
 
 const xrpl = require("xrpl");
 
@@ -68,7 +69,7 @@ const ProductCard = (props) => {
           <>
             <div className="absolute top-[-10px] left-[-10px] rounded-full bg-black w-12 h-12 flex items-center justify-center">
               {/* Circular photo goes here */}
-              <img
+              <Image
                 className="w-11 h-11 rounded-full object-cover"
                 src="profile.jpg"
                 alt="Profile"
@@ -87,7 +88,7 @@ const ProductCard = (props) => {
         <div className="w-full h-32 overflow-hidden rounded-t-lg">
           {/* Product photo with gradient overlay goes here */}
           <div className="w-full h-full bg-gradient-to-b from-black via-transparent to-white absolute top-0 left-0 rounded-t-lg z-0"></div>
-          <img
+          <Image
             className="w-full h-full object-cover rounded-t-lg"
             src="honda.jpg"
             alt="Product Image"

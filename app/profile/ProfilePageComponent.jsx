@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { UserProfile } from "@clerk/nextjs";
 import ProductUpload from "../product_upload/ProductUpload";
 import { Pencil, Star } from 'lucide-react'; // Import the edit and star icons
