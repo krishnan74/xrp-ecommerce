@@ -28,7 +28,7 @@ export default function Home() {
         </Button>
       </Link>
       <p className="mt-2 text-gray-500">
-        Don't have an account yet?{" "}
+        Don&apos;t have an account yet?{" "}
         <Link href={"signup"}>
           <span className="underline">Sign up here</span> 
         </Link>
