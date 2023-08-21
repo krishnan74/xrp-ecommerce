@@ -11,7 +11,7 @@ const ProfilePageComponent = (props) => {
   const [location, setLocation] = useState("Chennai, TamilNadu");
   const [website, setWebsite] = useState("https://example.com");
   const [role, setRole] = useState("Electronics dealer");
-  const [rating, setRating] = useState(4.5); // Example star rating
+  const [rating, setRating] = useState(4.5); 
 
   const handleEditClick = () => {
     setEditing(true);
