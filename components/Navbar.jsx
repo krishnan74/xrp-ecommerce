@@ -133,9 +133,8 @@ const Navbar = () => {
         {showWalletDiv && (
           <div className="absolute top-10 right-0 bg-white p-4 rounded-md shadow-md">
             {wallets.map((wallet) => (
-              <div className="flex">
+              <div key={wallet.classicAddress} className="flex">
                 <button
-                  key={wallet.classicAddress}
                   className="block w-full py-2 px-4 text-left hover:bg-gray-100"
                   onClick={() => setSelectedWallet(wallet)}
                 >
@@ -146,6 +145,7 @@ const Navbar = () => {
                 </button>
               </div>
             ))}
+
           </div>
         )}
       </div>
